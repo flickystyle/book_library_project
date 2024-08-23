@@ -45,14 +45,13 @@
 
 @media (max-width: 1024px) {
   .app-main {
-      width: 100%;
-      flex-direction: column;
+    width: 100%;
+    flex-direction: column;
   }
 
   .app-left-column,
   .app-right-column {
-      flex-basis: 100%;
-      align-self: unset;
+    flex-basis: 100%;
+    align-self: unset;
   }
 }
-
