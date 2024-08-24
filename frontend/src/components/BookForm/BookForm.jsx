@@ -8,7 +8,6 @@ const BookForm = () => {
     e.preventDefault();
     if (bookInfo.title && bookInfo.author) {
       //dispatch
-      console.log('dispatch');
       setBookInfo({ title: '', author: '' });
     }
   };
