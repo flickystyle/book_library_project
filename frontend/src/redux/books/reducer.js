@@ -7,8 +7,12 @@ const booksReducer = (state = initialState, action) => {
     case a.ADD_BOOK:
       return [...state, payload];
     case a.DELETE_BOOK:
-      const filteredArray = state.filter(({ id }) => id !== payload);
-      return filteredArray;
+      return state.filter(({ id }) => id !== payload);
+    case a.TOGGLE_FAVORITE:
+      const newState = state.map((book) =>
+        book.id === payload ? { ...book, isFavorite: !book.isFavorite } : book
+      );
+      return newState;
     default:
       return state;
   }
