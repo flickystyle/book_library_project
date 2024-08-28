@@ -17,6 +17,10 @@
     border-radius: 3px;
 }
 
+.book-form input:focus {
+    outline: 2px solid #0d6f5c;
+}
+
 .book-form button {
     background-color: #0d6f5c;
     color: #fff;
