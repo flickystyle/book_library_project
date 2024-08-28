@@ -35,7 +35,7 @@ const renderBooks = (books, handleDeleteBook, handleToggleFavorite) => {
 const BookList = () => {
     const books = useSelector((state) => state.books);
     const titleFilter = useSelector(selectTitleFilter);
-    
+
     const filteredBooks = books.filter(({ title }) => {
         const match = title.toLowerCase().includes(titleFilter.toLowerCase());
         return match;
