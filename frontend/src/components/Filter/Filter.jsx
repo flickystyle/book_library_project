@@ -2,6 +2,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     setTitleFilter,
     setAuthorFilter,
+    setOnlyFavoriteFilter,
+    selectOnlyFavoriteFilter,
     selectAuthorFilter,
     selectTitleFilter,
     resetFilters,
@@ -12,6 +14,7 @@ const Filter = () => {
     const dispatch = useDispatch();
     const title = useSelector(selectTitleFilter);
     const author = useSelector(selectAuthorFilter);
+    const onlyFavorite = useSelector(selectOnlyFavoriteFilter);
 
     const handleInput = (e) => {
         const { name, value } = e.target;
@@ -21,6 +24,9 @@ const Filter = () => {
                 break;
             case 'author':
                 dispatch(setAuthorFilter(value));
+                break;
+            case 'onlyFavorite':
+                dispatch(setOnlyFavoriteFilter());
                 break;
             default:
                 throw new Error('unknown filter');
@@ -51,6 +57,17 @@ const Filter = () => {
                         value={author}
                         name="author"
                     />
+                </div>
+                <div className="filter-group">
+                    <label>
+                        <input
+                            type="checkbox"
+                            onChange={handleInput}
+                            checked={onlyFavorite}
+                            name="onlyFavorite"
+                        />
+                        Only Favorite
+                    </label>
                 </div>
                 <button type="button" onClick={handleResetFilters}>
                     Reset Filters

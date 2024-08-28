@@ -20,13 +20,13 @@
 }
 
 .book-list li:hover {
-    background-color: #62D99C;
+    background-color: #36da82;
 }
 
 .book-list button {
     background-color: #fff;
-    color: #FF3D00;
-    border: 1px solid #FF3D00;
+    color: rgb(230, 142, 10);
+    border: 1px solid rgb(230, 142, 10);
     padding: 8px 12px;
     border-radius: 3px;
     cursor: pointer;
@@ -34,11 +34,11 @@
 }
 
 .book-list button:hover {
-    background-color: #fdd;
+    background-color: rgb(241, 225, 197);
 }
 
 .book-list .highlight {
-    background-color: #ff0;
+    background-color: rgb(246, 218, 170);
 }
 
 .book-list .book-info {

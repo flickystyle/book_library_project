@@ -4,10 +4,30 @@ import { deleteBook, toggleFavorite } from '../../redux/books/actionCreators';
 import {
     selectAuthorFilter,
     selectTitleFilter,
+    selectOnlyFavoriteFilter,
 } from '../../redux/slices/filterSlice';
 import './BookList.css';
 
-const renderBooks = (books, handleDeleteBook, handleToggleFavorite) => {
+const highlightMatch = (text, filter) => {
+    if (!filter) {
+        return text;
+    }
+    const regex = new RegExp(`(${filter})`, 'gi');
+    return text.split(regex).map((substring) => {
+        if (substring.toLowerCase() === filter.toLowerCase()) {
+            return <span className="highlight">{substring}</span>;
+        }
+        return substring;
+    });
+};
+
+const renderBooks = (
+    books,
+    handleDeleteBook,
+    handleToggleFavorite,
+    titleFilter,
+    authorFilter
+) => {
     if (books.length === 0) {
         return <p>No books availible</p>;
     }
@@ -15,8 +35,9 @@ const renderBooks = (books, handleDeleteBook, handleToggleFavorite) => {
         <li key={id}>
             <div className="book-info">
                 <span>
-                    {index + 1}. <cite>{title}</cite> by{' '}
-                    <strong>{author}</strong>
+                    {index + 1}.{' '}
+                    <cite>{highlightMatch(title, titleFilter)}</cite> by{' '}
+                    <strong>{highlightMatch(author, authorFilter)}</strong>
                 </span>
             </div>
             <div className="book-actions">
@@ -39,16 +60,19 @@ const BookList = () => {
     const books = useSelector((state) => state.books);
     const titleFilter = useSelector(selectTitleFilter);
     const authorFilter = useSelector(selectAuthorFilter);
+    const onlyFavoriteFilter = useSelector(selectOnlyFavoriteFilter);
 
-    const filteredBooks = books.filter(({ title, author }) => {
+    const filteredBooks = books.filter(({ title, author, isFavorite }) => {
         const matchByTitle = title
             .toLowerCase()
             .includes(titleFilter.toLowerCase());
         const matchByAuthor = author
             .toLowerCase()
             .includes(authorFilter.toLowerCase());
-        return matchByTitle && matchByAuthor;
+        const matchesFavorite = onlyFavoriteFilter ? isFavorite : true;
+        return matchByTitle && matchByAuthor && matchesFavorite;
     });
+
     const dispatch = useDispatch();
 
     const handleDeleteBook = (id) => {
@@ -66,7 +90,9 @@ const BookList = () => {
                 {renderBooks(
                     filteredBooks,
                     handleDeleteBook,
-                    handleToggleFavorite
+                    handleToggleFavorite,
+                    titleFilter,
+                    authorFilter
                 )}
             </ul>
         </div>
