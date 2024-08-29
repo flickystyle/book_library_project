@@ -17,11 +17,15 @@ const highlightMatch = (text, filter) => {
         return text;
     }
     const regex = new RegExp(`(${filter})`, 'gi');
-    return text.split(regex).map((substring) => {
+    return text.split(regex).map((substring, i) => {
         if (substring.toLowerCase() === filter.toLowerCase()) {
-            return <span className="highlight">{substring}</span>;
+            return (
+                <span className="highlight" key={i}>
+                    {substring}
+                </span>
+            );
         }
-        return substring;
+        return <span key={i}>{substring}</span>;
     });
 };
 
@@ -40,8 +44,8 @@ const renderBooks = (
             <div className="book-info">
                 <span>
                     {index + 1}.{' '}
-                    <cite>{highlightMatch(title, titleFilter)}</cite> by{' '}
-                    <strong>{highlightMatch(author, authorFilter)}</strong>
+                    <cite>{highlightMatch(title, titleFilter, id)}</cite> by{' '}
+                    <strong>{highlightMatch(author, authorFilter, id)}</strong>
                 </span>
             </div>
             <div className="book-actions">

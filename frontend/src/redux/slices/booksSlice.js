@@ -7,17 +7,17 @@ const booksSlice = createSlice({
     initialState,
     reducers: {
         addBook: (state, action) => {
-            return [...state, action.payload];
+            state.push(action.payload);
         },
         deleteBook: (state, action) => {
             return state.filter(({ id }) => id !== action.payload);
         },
         toggleFavoriteBook: (state, action) => {
-            return state.map((book) =>
-                book.id === action.payload
-                    ? { ...book, isFavorite: !book.isFavorite }
-                    : book
-            );
+            state.forEach((book) => {
+                if (book.id === action.payload) {
+                    book.isFavorite = !book.isFavorite;
+                }
+            });
         },
     },
 });

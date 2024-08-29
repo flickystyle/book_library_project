@@ -62,6 +62,9 @@ const BookForm = () => {
                 <button onClick={randomBookAddHandler} type="button">
                     Add random
                 </button>
+                <button onClick={randomBookAddHandler} type="button">
+                    Add random by API
+                </button>
             </form>
         </div>
     );
