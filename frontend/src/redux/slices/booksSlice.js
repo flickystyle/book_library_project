@@ -1,4 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+import createBookWithParams from '../../utils/createBookWithParams';
+import { setError } from './errorSlice';
+
+export const fetchBook = createAsyncThunk(
+    'books/fetchBook',
+    async (url, { dispatch }) => {
+        try {
+            const res = await axios.get(url);
+            return res.data;
+        } catch (error) {
+            dispatch(setError(error.message));
+            throw error;
+        }
+    }
+);
 
 const initialState = [];
 
@@ -7,6 +23,9 @@ const booksSlice = createSlice({
     initialState,
     reducers: {
         addBook: (state, action) => {
+            state.push(action.payload);
+        },
+        addRandomBook: (state, action) => {
             state.push(action.payload);
         },
         deleteBook: (state, action) => {
@@ -20,8 +39,17 @@ const booksSlice = createSlice({
             });
         },
     },
+    extraReducers: (builder) => {
+        builder.addCase(fetchBook.fulfilled, (state, action) => {
+            if (action.payload.title && action.payload.author) {
+                const newBook = createBookWithParams(action.payload, 'API');
+                state.push(newBook);
+            }
+        });
+    },
 });
 
-export const { addBook, deleteBook, toggleFavoriteBook } = booksSlice.actions;
+export const { addBook, deleteBook, toggleFavoriteBook, addRandomBook } =
+    booksSlice.actions;
 export const selectBooks = (state) => state.books;
 export default booksSlice.reducer;
