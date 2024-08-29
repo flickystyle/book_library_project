@@ -39,14 +39,15 @@ const renderBooks = (
     if (books.length === 0) {
         return <p>No books availible</p>;
     }
-    return books.map(({ author, title, id, isFavorite }, index) => (
+    return books.map(({ author, title, id, isFavorite, source }, index) => (
         <li key={id}>
             <div className="book-info">
                 <span>
                     {index + 1}.{' '}
                     <cite>{highlightMatch(title, titleFilter, id)}</cite> by{' '}
                     <strong>{highlightMatch(author, authorFilter, id)}</strong>
-                </span>
+                </span>{' '}
+                ({source})
             </div>
             <div className="book-actions">
                 <span onClick={() => handleToggleFavorite(id)}>

@@ -14,7 +14,7 @@ const BookForm = () => {
     const submitHandler = (e) => {
         e.preventDefault();
         if (bookInfo.title && bookInfo.author) {
-            const book = createBookWithParams(bookInfo);
+            const book = createBookWithParams(bookInfo, 'manual');
             dispatch(addBook(book));
             setBookInfo({ title: '', author: '' });
         }
@@ -30,7 +30,8 @@ const BookForm = () => {
     };
     const randomBookAddHandler = () => {
         const randomBook = createBookWithParams(
-            booksData[getRandomIndex(0, booksData.length)]
+            booksData[getRandomIndex(0, booksData.length)],
+            'random'
         );
         dispatch(addBook(randomBook));
     };
@@ -39,7 +40,7 @@ const BookForm = () => {
         try {
             const res = await axios.get('http://localhost:4000/random-book');
             if (res?.data.title && res?.data.author) {
-                const newBook = createBookWithParams(res.data);
+                const newBook = createBookWithParams(res.data, 'API');
                 dispatch(addBook(newBook));
             }
         } catch (error) {
