@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     addBook,
@@ -10,6 +11,7 @@ import { FaSpinner } from 'react-icons/fa';
 import { setError } from '../../redux/slices/errorSlice';
 import getRandomIndex from '../../utils/getRandomIndex';
 import createBookWithParams from '../../utils/createBookWithParams';
+
 import booksData from '../../data/books.json';
 import './BookForm.css';
 
@@ -19,6 +21,8 @@ const BookForm = () => {
     const [bookInfo, setBookInfo] = useState({ title: '', author: '' });
     const isLoadingViaAPI = useSelector(selectIsLoadingViaAPI);
     const dispatch = useDispatch();
+    const {t} = useTranslation();
+    
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -53,10 +57,10 @@ const BookForm = () => {
 
     return (
         <div className="app-block book-form">
-            <h2>Add a New Book</h2>
+            <h2>{t('components.form.addANewBook')}</h2>
             <form onSubmit={submitHandler}>
                 <div>
-                    <label htmlFor="title">Title:</label>
+                    <label htmlFor="title">{t('components.form.title')}:</label>
                     <input
                         id="title"
                         type="text"
@@ -66,7 +70,7 @@ const BookForm = () => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="author">Author:</label>
+                    <label htmlFor="author">{t('components.form.author')}:</label>
                     <input
                         id="author"
                         type="text"
@@ -75,9 +79,9 @@ const BookForm = () => {
                         onChange={onChangeHandler}
                     />
                 </div>
-                <button type="submit">Add book</button>
+                <button type="submit">{t('components.form.addBookButton')}</button>
                 <button onClick={randomBookAddHandler} type="button">
-                    Add random
+                {t('components.form.addRandomBookButton')}
                 </button>
                 <button
                     onClick={addRandomViaApiHandler}
@@ -86,11 +90,11 @@ const BookForm = () => {
                 >
                     {isLoadingViaAPI ? (
                         <>
-                            <span>Loading Book...</span>
+                            <span>{t('components.form.bookIsLoading')}</span>
                             <FaSpinner className="spinner" />
                         </>
                     ) : (
-                        'Add random  via API'
+                        `${t('components.form.addRandomBookButtonViaAPI')}`
                     )}
                 </button>
             </form>

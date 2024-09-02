@@ -1,5 +1,6 @@
 import { BsBookmarkStarFill, BsBookmarkStar } from 'react-icons/bs';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import {
     deleteBook,
     toggleFavoriteBook,
@@ -34,10 +35,11 @@ const renderBooks = (
     handleDeleteBook,
     handleToggleFavorite,
     titleFilter,
-    authorFilter
+    authorFilter,
+    t
 ) => {
     if (books.length === 0) {
-        return <p>No books availible</p>;
+        return <p>{t('components.list.emptyList')}</p>;
     }
     return books.map(({ author, title, id, isFavorite, source }, index) => (
         <li key={id}>
@@ -58,7 +60,7 @@ const renderBooks = (
                     )}
                 </span>
                 <button type="button" onClick={() => handleDeleteBook(id)}>
-                    Delete
+                    {t('components.list.deleteButton')}
                 </button>
             </div>
         </li>
@@ -66,6 +68,7 @@ const renderBooks = (
 };
 
 const BookList = () => {
+    const { t } = useTranslation();
     const books = useSelector(selectBooks);
     const titleFilter = useSelector(selectTitleFilter);
     const authorFilter = useSelector(selectAuthorFilter);
@@ -94,14 +97,15 @@ const BookList = () => {
 
     return (
         <div className="app-block book-list">
-            <h2>Book List</h2>
+            <h2>{t('components.list.bookList')}</h2>
             <ul>
                 {renderBooks(
                     filteredBooks,
                     handleDeleteBook,
                     handleToggleFavorite,
                     titleFilter,
-                    authorFilter
+                    authorFilter,
+                    t
                 )}
             </ul>
         </div>
