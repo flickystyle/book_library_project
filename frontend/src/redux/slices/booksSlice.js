@@ -5,34 +5,37 @@ import { setError } from './errorSlice';
 
 export const fetchBook = createAsyncThunk(
     'books/fetchBook',
-    async (url, { dispatch }) => {
+    async (url, thunkAPI) => {
         try {
             const res = await axios.get(url);
             return res.data;
         } catch (error) {
-            dispatch(setError(error.message));
-            throw error;
+            thunkAPI.dispatch(setError(error.message));
+            return thunkAPI.rejectWithValue(error);
         }
     }
 );
 
-const initialState = [];
+const initialState = { books: [], isLoadingViaAPI: false };
 
 const booksSlice = createSlice({
     name: 'books',
     initialState,
     reducers: {
         addBook: (state, action) => {
-            state.push(action.payload);
+            state.books.push(action.payload);
         },
         addRandomBook: (state, action) => {
-            state.push(action.payload);
+            state.books.push(action.payload);
         },
         deleteBook: (state, action) => {
-            return state.filter(({ id }) => id !== action.payload);
+            return {
+                ...state,
+                books: state.books.filter(({ id }) => id !== action.payload),
+            };
         },
         toggleFavoriteBook: (state, action) => {
-            state.forEach((book) => {
+            state.books.forEach((book) => {
                 if (book.id === action.payload) {
                     book.isFavorite = !book.isFavorite;
                 }
@@ -40,16 +43,27 @@ const booksSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchBook.fulfilled, (state, action) => {
-            if (action.payload.title && action.payload.author) {
-                const newBook = createBookWithParams(action.payload, 'API');
-                state.push(newBook);
-            }
-        });
+        builder
+            .addCase(fetchBook.pending, (state) => {
+                state.isLoadingViaAPI = true;
+                return state;
+            })
+            .addCase(fetchBook.fulfilled, (state, action) => {
+                state.isLoadingViaAPI = false;
+                if (action.payload.title && action.payload.author) {
+                    const newBook = createBookWithParams(action.payload, 'API');
+                    state.books.push(newBook);
+                }
+            })
+            .addCase(fetchBook.rejected, (state) => {
+                state.isLoadingViaAPI = false;
+                return state;
+            });
     },
 });
 
 export const { addBook, deleteBook, toggleFavoriteBook, addRandomBook } =
     booksSlice.actions;
-export const selectBooks = (state) => state.books;
+export const selectBooks = (state) => state.books.books;
+export const selectIsLoadingViaAPI = (state) => state.books.isLoadingViaAPI;
 export default booksSlice.reducer;
